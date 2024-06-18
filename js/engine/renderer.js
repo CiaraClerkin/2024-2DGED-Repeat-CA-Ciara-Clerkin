@@ -1,4 +1,5 @@
-//All jsGameEngine.zip moodle
+//jsGameEngine.zip moodle
+//I added drawing circle
 
 // Import the required modules and classes.
 import Component from './component.js';
@@ -38,10 +39,21 @@ class Renderer extends Component {
         ctx.drawImage(this.image, 0, 0, w, h);
         ctx.restore();
       }
-    } else {
-      // If no image is provided or it has not finished loading, draw a rectangle with the specified color.
+    } 
+    else {
       ctx.fillStyle = this.color;
-      ctx.fillRect(this.gameObject.x, this.gameObject.y, this.width, this.height);
+      // circles need a height of 0 to be drawn and rectangles need to have a height greater than 0
+      if (this.height == 0) {
+        //https://www.w3schools.com/graphics/canvas_circles.asp
+        ctx.beginPath();
+        ctx.arc(this.gameObject.x, this.gameObject.y, this.width, this.height, 2 * Math.PI);
+        ctx.fill();
+        ctx.stroke(); 
+      }
+      else {
+        // If no image is provided or it has not finished loading, draw a rectangle with the specified color.
+        ctx.fillRect(this.gameObject.x, this.gameObject.y, this.width, this.height);
+      }
     }
   }
 }

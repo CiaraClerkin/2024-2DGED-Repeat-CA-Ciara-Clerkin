@@ -42,7 +42,15 @@ class Physics extends Component {
     const left = this.gameObject.x;
     const right = this.gameObject.x + renderer.width;
     const top = this.gameObject.y;
-    const bottom = this.gameObject.y + renderer.height;
+
+    //Effort to make collision for circular platforms
+    let bottom = this.gameObject.y;
+    if (renderer.height == 0) {
+      bottom += renderer.width;
+    }
+    else {
+      bottom += renderer.height;
+    }
 
     // Return the bounding box.
     return [left, right, top, bottom];
