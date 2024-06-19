@@ -1,4 +1,4 @@
-//All jsGameEngine.zip moodle
+//All jsGameEngine.zip moodle, except attraction
 
 // Importing necessary components and resources
 import GameObject from '../engine/gameobject.js';
@@ -32,6 +32,8 @@ class Player extends GameObject {
     this.isInvulnerable = false;
     this.isGamepadMovement = false;
     this.isGamepadJump = false;
+    this.attracting = true;
+    this.currentFace = "top";
   }
 
   // The update function runs every frame and contains game logic
@@ -41,21 +43,64 @@ class Player extends GameObject {
 
     this.handleGamepadInput(input);
     
+    // Attraction (basic)
+    /*if (input.isKeyDown('69')) {
+      this.attracting = true;
+    }*/
+
+    /*if (this.attracting == false) {
+      this.currentFace = "top";
+    }*/
+
+
     // Handle player movement
+
     if (!this.isGamepadMovement && input.isKeyDown('ArrowRight')) {
-      physics.velocity.x = 100;
+      if (this.currentFace == "right") {
+        physics.velocity.y = 100;
+        physics.velocity.x = 0;
+      }
+      else if (this.currentFace == "bottom") {
+        physics.velocity.x = -100;
+        physics.velocity.y = 0;
+      }
+      else if (this.currentFace == "left") {
+        physics.velocity.y = -100;
+        physics.velocity.x = 0;
+      }
+      else {
+        physics.velocity.x = 100;
+        physics.velocity.y = 0;
+      }
       this.direction = -1;
+      
     } else if (!this.isGamepadMovement && input.isKeyDown('ArrowLeft')) {
-      physics.velocity.x = -100;
+      if (this.currentFace == "left") { 
+        physics.velocity.y = 100;
+        physics.velocity.x = 0;
+      }
+      else if (this.currentFace == "bottom") {
+        physics.velocity.x = 100;
+        physics.velocity.y = 0;
+      }
+      else if (this.currentFace == "right") {
+        physics.velocity.y = -100;
+        physics.velocity.x = 0;
+      }
+      else {
+        physics.velocity.x = -100;
+        physics.velocity.y = 0;
+      }
       this.direction = 1;
     } else if (!this.isGamepadMovement) {
       physics.velocity.x = 0;
+      //physics.velocity.y = 0;
     }
 
     // Handle player jumping
-    if (!this.isGamepadJump && input.isKeyDown('ArrowUp') && this.isOnPlatform) {
+    /*if (!this.isGamepadJump && input.isKeyDown('ArrowUp') && this.isOnPlatform) {
       this.startJump();
-    }
+    } decided not to have jumping in the game, encourages player to be creative with main game mechanic*/
 
     if (this.isJumping) {
       this.updateJump(deltaTime);
@@ -77,23 +122,60 @@ class Player extends GameObject {
         this.collidedWithEnemy();
       }
     }
+
+    console.log(this.currentFace);
   
     // Handle collisions with platforms
     this.isOnPlatform = false;  // Reset this before checking collisions with platforms
     const platforms = this.game.gameObjects.filter((obj) => obj instanceof Platform);
     for (const platform of platforms) {
       if (physics.isColliding(platform.getComponent(Physics))) {
-        if (!this.isJumping) {
+        if (!this.isJumping) {  // reminder to remove ability to jump
           physics.velocity.y = 0;
           physics.acceleration.y = 0;
           this.y = platform.y - this.renderer.height;
           this.isOnPlatform = true;
+
+          if (this.attracting) {
+            if (this.currentFace == "top") {
+              if (this.x < platform.x && input.isKeyDown("ArrowLeft")) {
+                this.currentFace = "left";  
+              }
+              else if (this.x > platform.x + platform.width && input.isKeyDown("ArrowRight")) {
+                this.currentFace = "right";
+              }
+            }
+            else if (this.currentFace == "left") {
+              if (this.y < platform.y && input.isKeyDown("ArrowLeft")) {
+                this.currentFace = "bottom";
+              }
+              else if (this.y > platform.y + platform.height && input.isKeyDown("ArrowRight")) {
+                this.currentFace = "top";
+              }
+            }            
+            else if (this.currentFace == "bottom") {
+              if (this.x < platform.x && input.isKeyDown("ArrowLeft")) {
+                this.currentFace = "right";  
+              }
+              else if (this.x > platform.x + platform.width && input.isKeyDown("ArrowRight")) {
+                this.currentFace = "left";
+              }
+            }
+            else if (this.currentFace == "right") {
+              if (this.y < platform.y && input.isKeyDown("ArrowLeft")) {
+                this.currentFace = "top";  
+              }
+              else if (this.y > platform.y + platform.height && input.isKeyDown("ArrowRight")) {
+                this.currentFace = "bottom";
+              }
+            }
+          }
         }
       }
     }
   
     // Check if player has fallen off the bottom of the screen
-    if (this.y > this.game.canvas.height) {
+    if (this.y > this.game.canvas.height * 3) {
       this.resetPlayerState();
     }
 
@@ -188,6 +270,8 @@ class Player extends GameObject {
     const particleSystem = new ParticleSystem(this.x, this.y, 'yellow', 20, 1, 0.5);
     this.game.addGameObject(particleSystem);
   }
+
+
 
   resetPlayerState() {
     // Reset the player's state, repositioning it and nullifying movement
