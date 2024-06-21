@@ -11,6 +11,7 @@ class Input extends Component {
     super();
     // An object to store the state of each key. The keys are the keyboard key codes, and the values are boolean indicating whether the key is down.
     this.keys = {};
+    this.pressKeys = {};
     // The index of the gamepad that this input component is listening to.
     this.gamepadIndex = null;
 
@@ -19,6 +20,8 @@ class Input extends Component {
     // When a keyup event is fired, the corresponding key in the keys object is set to false.
     document.addEventListener('keydown', (event) => (this.keys[event.code] = true));
     document.addEventListener('keyup', (event) => (this.keys[event.code] = false));
+
+    document.addEventListener('keypress', (event) => (this.pressKeys[event.code] = !this.pressKeys[event.code]));
 
     // Add event listeners for the gamepadconnected and gamepaddisconnected events.
     // When a gamepadconnected event is fired, the gamepadIndex property is set to the index of the connected gamepad.
@@ -37,6 +40,10 @@ class Input extends Component {
   isKeyDown(key) {
     // If the key is in the keys object and its value is true, return true. Otherwise, return false.
     return this.keys[key] || false;
+  }
+
+  isKeyPress(key) {
+    return this.pressKeys[key] || false; 
   }
 
   // This method returns the current state of the gamepad this input component is listening to, or null if there is no such gamepad.

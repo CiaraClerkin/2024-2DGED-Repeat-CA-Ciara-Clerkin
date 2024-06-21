@@ -44,9 +44,12 @@ class Player extends GameObject {
     this.handleGamepadInput(input);
     
     // Attraction (basic)
-    /*if (input.isKeyDown('69')) {
-      this.attracting = true;
-    }*/
+    //https://www.toptal.com/developers/keycode/e
+    if (input.isKeyPress('KeyE')) {   //change this to a key press
+      console.log(this.attracting);
+      if (!this.attracting) this.attracting = true;
+      else this.attracting = false;
+    }
 
     /*if (this.attracting == false) {
       this.currentFace = "top";
@@ -54,9 +57,9 @@ class Player extends GameObject {
 
     // Handle player movement
 
-    console.log(this.direction);
+    /*console.log(this.direction);
     console.log(this.currentFace);
-    console.log(this.attracting);
+    console.log(this.attracting);*/
 
     if (!this.isGamepadMovement && input.isKeyDown('ArrowRight')) {
       if (!this.attracting) physics.velocity.x = 100;
@@ -128,7 +131,7 @@ class Player extends GameObject {
     for (const platform of platforms) {
       //console.log(physics.isColliding(platform.getComponent(Physics)));
       if (physics.isColliding(platform.getComponent(Physics))) {
-        this.attracting = true;
+        //this.attracting = true;
         if (!this.isJumping) {  // reminder to remove ability to jump
           if (!this.attracting) {
             physics.velocity.y = 0;
@@ -141,8 +144,9 @@ class Player extends GameObject {
             this.currentFace = physics.getFace(this.direction, this.currentFace, platform.getComponent(Physics));
             //this.currentFace = physics.getFace(this.direction, this.currentFace, platform.getComponent(Physics));
             
+            //physics.gravity.y = 0;
+
             if (this.direction == 1) {
-              //physics.gravity.y = 0;
               if (this.currentFace == "top") {
                 physics.velocity.x = -100;
                 physics.velocity.y = 0;
@@ -160,7 +164,7 @@ class Player extends GameObject {
                 physics.velocity.x = 100;
                 physics.velocity.y = 0;
                 physics.acceleration.y = 0;
-                physics.gravity.y = 0;
+                //physics.gravity.y = 0;
                 this.y = platform.y + 100; //platform.renderer.width
               }
               else if (this.currentFace == "right") {
