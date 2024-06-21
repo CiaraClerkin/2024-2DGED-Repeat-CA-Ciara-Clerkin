@@ -32,7 +32,7 @@ class Player extends GameObject {
     this.isInvulnerable = false;
     this.isGamepadMovement = false;
     this.isGamepadJump = false;
-    this.attracting = true;
+    this.attracting = false;
     this.currentFace = "top";
   }
 
@@ -52,46 +52,40 @@ class Player extends GameObject {
       this.currentFace = "top";
     }*/
 
-
     // Handle player movement
 
+    console.log(this.direction);
+    console.log(this.currentFace);
+    console.log(this.attracting);
+
     if (!this.isGamepadMovement && input.isKeyDown('ArrowRight')) {
-      if (this.currentFace == "right") {
-        physics.velocity.y = 100;
-        physics.velocity.x = 0;
-      }
-      else if (this.currentFace == "bottom") {
-        physics.velocity.x = -100;
-        physics.velocity.y = 0;
-      }
-      else if (this.currentFace == "left") {
-        physics.velocity.y = -100;
-        physics.velocity.x = 0;
-      }
+      if (!this.attracting) physics.velocity.x = 100;
       else {
-        physics.velocity.x = 100;
-        physics.velocity.y = 0;
       }
+      //physics.velocity.y = 0;
       this.direction = -1;
-      
     } else if (!this.isGamepadMovement && input.isKeyDown('ArrowLeft')) {
-      if (this.currentFace == "left") { 
-        physics.velocity.y = 100;
-        physics.velocity.x = 0;
-      }
-      else if (this.currentFace == "bottom") {
-        physics.velocity.x = 100;
-        physics.velocity.y = 0;
-      }
-      else if (this.currentFace == "right") {
-        physics.velocity.y = -100;
-        physics.velocity.x = 0;
-      }
-      else {
-        physics.velocity.x = -100;
-        physics.velocity.y = 0;
-      }
-      this.direction = 1;
+        if (!this.attracting) physics.velocity.x = -100;
+        else {
+          /*if (this.currentFace == "top") {
+            physics.velocity.x = -100;
+            physics.velocity.y = 0;
+          }
+          else if (this.currentFace == "left") {
+            physics.velocity.x = 0;
+            physics.velocity.y = 100;
+          }
+          else if (this.currentFace == "bottom") {
+            physics.velocity.x = 100;
+            physics.velocity.y = 0;
+          }
+          else if (this.currentFace == "right") {
+            physics.velocity.x = 0;
+            physics.velocity.y = 100;
+          }*/
+        }
+        //physics.velocity.y = 0;
+        this.direction = 1;
     } else if (!this.isGamepadMovement) {
       physics.velocity.x = 0;
       //physics.velocity.y = 0;
@@ -122,53 +116,154 @@ class Player extends GameObject {
         this.collidedWithEnemy();
       }
     }
-
-    console.log(this.currentFace);
   
+    /*if (this.attracting) {
+      physics.gravity = 0;
+      physics.acceleration = 0;
+    }*/
+
     // Handle collisions with platforms
     this.isOnPlatform = false;  // Reset this before checking collisions with platforms
     const platforms = this.game.gameObjects.filter((obj) => obj instanceof Platform);
     for (const platform of platforms) {
+      //console.log(physics.isColliding(platform.getComponent(Physics)));
       if (physics.isColliding(platform.getComponent(Physics))) {
+        this.attracting = true;
         if (!this.isJumping) {  // reminder to remove ability to jump
-          physics.velocity.y = 0;
-          physics.acceleration.y = 0;
-          this.y = platform.y - this.renderer.height;
+          if (!this.attracting) {
+            physics.velocity.y = 0;
+            physics.acceleration.y = 0;
+            this.y = platform.y - this.renderer.height;  // do this for all of the faces
+          }
           this.isOnPlatform = true;
 
           if (this.attracting) {
-            if (this.currentFace == "top") {
-              if (this.x < platform.x && input.isKeyDown("ArrowLeft")) {
+            this.currentFace = physics.getFace(this.direction, this.currentFace, platform.getComponent(Physics));
+            //this.currentFace = physics.getFace(this.direction, this.currentFace, platform.getComponent(Physics));
+            
+            if (this.direction == 1) {
+              //physics.gravity.y = 0;
+              if (this.currentFace == "top") {
+                physics.velocity.x = -100;
+                physics.velocity.y = 0;
+                physics.acceleration.y = 0;
+                this.y = platform.y - this.renderer.height;
+              }
+              else if (this.currentFace == "left") {
+                physics.velocity.x = 0;
+                physics.velocity.y = 100;
+                physics.acceleration.x = 0;
+                this.x = platform.x - this.renderer.width + 1;
+                //physics.gravity = 0;
+              }
+              else if (this.currentFace == "bottom") {
+                physics.velocity.x = 100;
+                physics.velocity.y = 0;
+                physics.acceleration.y = 0;
+                physics.gravity.y = 0;
+                this.y = platform.y + 100; //platform.renderer.width
+              }
+              else if (this.currentFace == "right") {
+                physics.velocity.x = 0;
+                physics.velocity.y = 100;
+                this.x = platform.x;
+                physics.acceleration.x = 0;
+              }  
+            }
+
+            /*if (this.currentFace == "top") {
+              if (this.x + this.renderer.width - 1 <= platform.x && this.direction == 1) {
                 this.currentFace = "left";  
               }
-              else if (this.x > platform.x + platform.width && input.isKeyDown("ArrowRight")) {
+              else if (this.x >= platform.x + platform.width && this.direction == -1) {
                 this.currentFace = "right";
               }
             }
             else if (this.currentFace == "left") {
-              if (this.y < platform.y && input.isKeyDown("ArrowLeft")) {
+              if (this.y >= platform.y + platform.height && this.direction == 1) {
                 this.currentFace = "bottom";
               }
-              else if (this.y > platform.y + platform.height && input.isKeyDown("ArrowRight")) {
+              else if (this.y <= platform.y && this.direction == -1) {
                 this.currentFace = "top";
               }
             }            
             else if (this.currentFace == "bottom") {
-              if (this.x < platform.x && input.isKeyDown("ArrowLeft")) {
+              if (this.x + this.renderer.width <= platform.x && this.direction == 1) {
                 this.currentFace = "right";  
               }
-              else if (this.x > platform.x + platform.width && input.isKeyDown("ArrowRight")) {
+              else if (this.x >= platform.x + platform.width && this.direction == -1) {
                 this.currentFace = "left";
               }
             }
             else if (this.currentFace == "right") {
-              if (this.y < platform.y && input.isKeyDown("ArrowLeft")) {
+              if (this.y <= platform.y && this.direction == 1) {
                 this.currentFace = "top";  
               }
-              else if (this.y > platform.y + platform.height && input.isKeyDown("ArrowRight")) {
+              else if (this.y + this.renderer.height >= platform.y + platform.height && this.direction == -1) {
                 this.currentFace = "bottom";
               }
+            }*/
+
+            /*if (this.direction == 1) {
+              if (this.currentFace == "left") {
+                if (this.y >= platform.y + platform.height) {
+                  this.currentFace = "bottom";
+                }
+                physics.velocity.x = 0;
+                physics.velocity.y = 100;
+              }
+              else if (this.currentFace == "bottom") {
+                if (this.x + this.renderer.width <= platform.x) {
+                  this.currentFace = "right";  
+                }
+                physics.velocity.x = 100;
+                physics.velocity.y = 0;
+              }
+              else if (this.currentFace == "right") {
+                if (this.y <= platform.y) {
+                  this.currentFace = "top";  
+                }
+                physics.velocity.x = 0;
+                physics.velocity.y = -100;
+              }
+              else {
+                if (this.x + this.renderer.width - 1 <= platform.x) {
+                  this.currentFace = "left";  
+                }
+                physics.velocity.x = -100;
+                physics.velocity.y = 0;
+              }
             }
+            else if (this.direction == -1) {
+              if (this.currentFace == "right") { 
+                if (this.y + this.renderer.height >= platform.y + platform.height) {
+                  this.currentFace = "bottom";
+                }
+                physics.velocity.x = 0;
+                physics.velocity.y = 100;
+              }
+              else if (this.currentFace == "bottom") {
+                if (this.x >= platform.x + platform.width) {
+                  this.currentFace = "left";
+                }
+                physics.velocity.x = 100;
+                physics.velocity.y = 0;
+              }
+              else if (this.currentFace == "left") {
+                if (this.y <= platform.y) {
+                  this.currentFace = "top";
+                }
+                physics.velocity.x = 0;
+                physics.velocity.y = -100;
+              }
+              else {
+                if (this.x >= platform.x + platform.width) {
+                  this.currentFace = "right";
+                }
+                physics.velocity.x = 100;
+                physics.velocity.y = 0;
+              }
+            }*/
           }
         }
       }
@@ -283,6 +378,7 @@ class Player extends GameObject {
     this.isOnPlatform = false;
     this.isJumping = false;
     this.jumpTimer = 0;
+    this.currentFace = "top";
   }
 
   resetGame() {

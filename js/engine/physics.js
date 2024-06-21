@@ -59,6 +59,49 @@ class Physics extends Component {
     // Return the bounding box.
     return [left, right, top, bottom];
   }
+
+  /*getCorners() {
+    const renderer = this.gameObject.getComponent(Renderer);
+
+    // Calculate the left, right, top, and bottom corners of the bounding box.
+    const left = this.gameObject.x;
+    const right = this.gameObject.x - renderer.width;
+    const top = this.gameObject.y;
+    const bottom = this.gameObject.y + renderer.height;
+
+    return [left, right, top, bottom];
+  }*/
+
+  getFace(direction, currentFace, otherPhysics) {
+    const [left, right, top, bottom] = this.getBoundingBox();
+    const [otherLeft, otherRight, otherTop, otherBottom] = otherPhysics.getBoundingBox();
+    
+    const renderer = this.gameObject.getComponent(Renderer);
+
+    console.log(right + ", " + otherLeft);
+
+    if (direction == 1) {
+      if (currentFace == "top" && left - renderer.width <= otherLeft) {
+        return "left";  
+      }
+      else if (currentFace == "left" && top + renderer.height >= otherBottom) {
+        return "bottom";
+      }
+      else if (currentFace == "bottom" && left >= otherRight) {
+        return "right";
+      }
+      else if (currentFace == "right" && bottom >= otherTop) {
+        return "top";
+      }
+      else {
+        return currentFace;
+      }
+    //}
+    //else if (direction == -1) {
+  
+    //}
+    }
+  }
 }
 
 // The Physics class is then exported as the default export of this module.
