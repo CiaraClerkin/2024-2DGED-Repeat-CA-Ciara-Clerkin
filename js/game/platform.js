@@ -18,7 +18,8 @@ class Platform extends GameObject {
     
     // Add a Renderer component to this platform with the specified color, width, and height.
     // The Renderer component is responsible for rendering the platform on the canvas
-    this.addComponent(new Renderer(color, width, height));
+    this.renderer = new Renderer(color, width, height);
+    this.addComponent(this.renderer);
     
     // Add a Physics component to this platform, with initial velocity, acceleration, and forces set to zero.
     // Since platforms don't move, these values will remain zero throughout the game

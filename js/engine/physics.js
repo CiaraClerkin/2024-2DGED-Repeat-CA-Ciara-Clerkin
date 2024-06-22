@@ -31,7 +31,7 @@ class Physics extends Component {
     const [otherLeft, otherRight, otherTop, otherBottom] = otherPhysics.getBoundingBox();
 
     // Check if the bounding boxes overlap. If they do, return true. If not, return false.
-    return left < otherRight && right > otherLeft && top < otherBottom && bottom > otherTop;
+    return left <= otherRight && right >= otherLeft && top <= otherBottom && bottom >= otherTop;
   }
 
   // The getBoundingBox method returns the bounding box of the game object in terms of its left, right, top, and bottom edges.

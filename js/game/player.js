@@ -62,14 +62,16 @@ class Player extends GameObject {
     console.log(this.attracting);*/
 
     if (!this.isGamepadMovement && input.isKeyDown('ArrowRight')) {
-      if (!this.attracting) physics.velocity.x = 100;
-      else {
-      }
+      //if (!this.attracting) physics.velocity.x = 100;
+      physics.velocity.x = 100;
+      //else {
+      //}
       //physics.velocity.y = 0;
       this.direction = -1;
     } else if (!this.isGamepadMovement && input.isKeyDown('ArrowLeft')) {
-        if (!this.attracting) physics.velocity.x = -100;
-        else {
+        //if (!this.attracting) physics.velocity.x = -100;
+        physics.velocity.x = -100;
+        //else {
           /*if (this.currentFace == "top") {
             physics.velocity.x = -100;
             physics.velocity.y = 0;
@@ -86,7 +88,7 @@ class Player extends GameObject {
             physics.velocity.x = 0;
             physics.velocity.y = 100;
           }*/
-        }
+        //}
         //physics.velocity.y = 0;
         this.direction = 1;
     } else if (!this.isGamepadMovement) {
@@ -125,55 +127,92 @@ class Player extends GameObject {
       physics.acceleration = 0;
     }*/
 
+    console.log(this.currentFace);
+
     // Handle collisions with platforms
     this.isOnPlatform = false;  // Reset this before checking collisions with platforms
     const platforms = this.game.gameObjects.filter((obj) => obj instanceof Platform);
     for (const platform of platforms) {
       //console.log(physics.isColliding(platform.getComponent(Physics)));
+
+      //console.log(platform.color);
+
+      // attracting to blue platform
+      if (this.attracting) { 
+        if (platform.renderer.color == "blue") {
+          playerCenterX = (this.x + this.renderer.width) / 2;
+          playerCenterY = (this.y + this.renderer.height) / 2;
+          platformCenterX = (this.x + platform.renderer.width) / 2;
+          platformCenterY = (this.y + platform.renderer.height) / 2;
+          
+          // m = the slope of the line from the player to the platform
+          m = valueOf((playerCenterY - platformCenterY) / (playerCenterX - platformCenterX));
+
+          if (this.x + this.renderer.width >= platform.x - 200) {
+            // speed = distance/time
+            physics.velocity.x = 200;      
+          }
+          else if (this.x <= platform.x + platform.renderer.width + 200) {
+            physics.velocity.x = 200;
+          }
+
+          if (this.y <= platform.y + 200) {
+            physics.velocity.y = 200;
+          }
+          else if (this.y + this.renderer.height >= platform.y - 200) {
+            physics.velocity.y = 200;    
+          }
+        }
+      }
+
       if (physics.isColliding(platform.getComponent(Physics))) {
-        //this.attracting = true;
+        console.log("touching platform");
+        if (platform.renderer.color == "blue") this.attracting = false;
+        
         if (!this.isJumping) {  // reminder to remove ability to jump
-          if (!this.attracting) {
+          //if (!this.attracting) {
             physics.velocity.y = 0;
             physics.acceleration.y = 0;
             this.y = platform.y - this.renderer.height;  // do this for all of the faces
-          }
+          //}
           this.isOnPlatform = true;
+        }
 
-          if (this.attracting) {
-            this.currentFace = physics.getFace(this.direction, this.currentFace, platform.getComponent(Physics));
+        /*if (this.attracting) {
+          this.currentFace = physics.getFace(this.direction, this.currentFace, platform.getComponent(Physics));
+          if (this.direction == 1) {
+            if (this.currentFace == "top") {
+              physics.velocity.x = -100;
+              physics.velocity.y = 0;
+              physics.acceleration.y = 0;
+              this.y = platform.y - this.renderer.height;
+            }
+            else if (this.currentFace == "left") {
+              physics.velocity.x = 0;
+              physics.velocity.y = 100;
+              //physics.acceleration.x = 0;
+              //physics.gravity = 0;
+              this.x = platform.x - this.renderer.height;
+            }
+            else if (this.currentFace == "bottom") {
+              physics.velocity.x = 100;
+              physics.velocity.y = 0;
+              physics.acceleration.y = 0;
+              //physics.gravity.y = 0;
+              this.y = platform.y + 100; //platform.renderer.width
+            }
+            else if (this.currentFace == "right") {
+              physics.velocity.x = 0;
+              physics.velocity.y = 100;
+              this.x = platform.x;
+              physics.acceleration.x = 0;
+            }  
+          }*/
+
+          
             //this.currentFace = physics.getFace(this.direction, this.currentFace, platform.getComponent(Physics));
             
             //physics.gravity.y = 0;
-
-            if (this.direction == 1) {
-              if (this.currentFace == "top") {
-                physics.velocity.x = -100;
-                physics.velocity.y = 0;
-                physics.acceleration.y = 0;
-                this.y = platform.y - this.renderer.height;
-              }
-              else if (this.currentFace == "left") {
-                physics.velocity.x = 0;
-                physics.velocity.y = 100;
-                physics.acceleration.x = 0;
-                this.x = platform.x - this.renderer.width + 1;
-                //physics.gravity = 0;
-              }
-              else if (this.currentFace == "bottom") {
-                physics.velocity.x = 100;
-                physics.velocity.y = 0;
-                physics.acceleration.y = 0;
-                //physics.gravity.y = 0;
-                this.y = platform.y + 100; //platform.renderer.width
-              }
-              else if (this.currentFace == "right") {
-                physics.velocity.x = 0;
-                physics.velocity.y = 100;
-                this.x = platform.x;
-                physics.acceleration.x = 0;
-              }  
-            }
 
             /*if (this.currentFace == "top") {
               if (this.x + this.renderer.width - 1 <= platform.x && this.direction == 1) {
@@ -268,8 +307,8 @@ class Player extends GameObject {
                 physics.velocity.y = 0;
               }
             }*/
-          }
-        }
+          //}
+        //}
       }
     }
   
