@@ -2,6 +2,7 @@
 
 // This class depends on the Camera, which is a separate module and needs to be imported.
 import Camera from './camera.js';
+import { AudioFiles } from './resources.js';
 
 // The Game class is responsible for setting up and managing the main game loop.
 class Game {
@@ -25,6 +26,8 @@ class Game {
     window.addEventListener('resize', () => this.resizeCanvas());
     // Instantiate a new camera without a target and with dimensions equal to the canvas size.
     this.camera = new Camera(null, this.canvas.width, this.canvas.height);
+    // Background Music
+    this.bgm = new Audio(AudioFiles.bgm);
   }
 
   // This method resizes the canvas to fill the window, with a small margin.
@@ -51,6 +54,9 @@ class Game {
     this.camera.update();
     // Draw the game objects on the canvas.
     this.draw();
+
+    // Play background music
+    //this.bgm.play();
 
     // Request the next animation frame, which will call this method again.
     requestAnimationFrame((timestamp) => this.gameLoop(timestamp));

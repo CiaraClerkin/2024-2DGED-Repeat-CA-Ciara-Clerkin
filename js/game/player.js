@@ -6,6 +6,7 @@ import Renderer from '../engine/renderer.js';
 import Physics from '../engine/physics.js';
 import Input from '../engine/input.js';
 import { Images } from '../engine/resources.js';
+import { AudioFiles } from '../engine/resources.js';
 import Enemy from './enemy.js';
 import Platform from './platform.js';
 import Collectible from './collectible.js';
@@ -34,6 +35,8 @@ class Player extends GameObject {
     this.isGamepadJump = false;
     this.attracting = false;
     this.currentFace = "top";
+    this.attractSound = new Audio(AudioFiles.attract);
+    this.repelSound = new Audio(AudioFiles.repel);
   }
 
   // The update function runs every frame and contains game logic
@@ -47,8 +50,25 @@ class Player extends GameObject {
     //https://www.toptal.com/developers/keycode/e
     if (input.isKeyPress('KeyE')) {   //change this to a key press
       console.log(this.attracting);
-      if (!this.attracting) this.attracting = true;
-      else this.attracting = false;
+      if (!this.attracting) {
+        //console.log(false);
+        this.attracting = true;  
+      } 
+      else {
+        this.attracting = false;
+      }
+    }
+
+    // avoid looping?
+    if (input.isKeyDown('KeyE')) {
+      if (!this.attracting) {
+        this.repelSound.pause();
+        this.attractSound.play();
+      } 
+      else {
+        this.attractSound.pause;
+        this.repelSound.play();
+      } 
     }
 
     /*if (this.attracting == false) {
@@ -127,7 +147,7 @@ class Player extends GameObject {
       physics.acceleration = 0;
     }*/
 
-    console.log(this.currentFace);
+    //console.log(this.currentFace);
 
     // Handle collisions with platforms
     this.isOnPlatform = false;  // Reset this before checking collisions with platforms
@@ -140,13 +160,13 @@ class Player extends GameObject {
       // attracting to blue platform
       if (this.attracting) { 
         if (platform.renderer.color == "blue") {
-          playerCenterX = (this.x + this.renderer.width) / 2;
+          /*playerCenterX = (this.x + this.renderer.width) / 2;
           playerCenterY = (this.y + this.renderer.height) / 2;
           platformCenterX = (this.x + platform.renderer.width) / 2;
-          platformCenterY = (this.y + platform.renderer.height) / 2;
+          platformCenterY = (this.y + platform.renderer.height) / 2;*/
           
           // m = the slope of the line from the player to the platform
-          m = valueOf((playerCenterY - platformCenterY) / (playerCenterX - platformCenterX));
+          //m = valueOf((playerCenterY - platformCenterY) / (playerCenterX - platformCenterX));
 
           if (this.x + this.renderer.width >= platform.x - 200) {
             // speed = distance/time
@@ -166,7 +186,7 @@ class Player extends GameObject {
       }
 
       if (physics.isColliding(platform.getComponent(Physics))) {
-        console.log("touching platform");
+        //console.log("touching platform");
         if (platform.renderer.color == "blue") this.attracting = false;
         
         if (!this.isJumping) {  // reminder to remove ability to jump
