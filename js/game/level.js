@@ -7,6 +7,7 @@ import Enemy from './enemy.js';
 import PlayerUI from './playerUI.js';
 import Platform from './platform.js';
 import Collectible from './collectible.js';
+import Button from './button.js';
 
 // Define a class Level that extends the Game class from the engine
 class Level extends Game {
@@ -41,6 +42,13 @@ class Level extends Game {
     ];
     for (const platform of platforms) {
       this.addGameObject(platform);
+    }
+
+
+    const buttons = [new Button("Pause", 0, 50, 100, 50)];
+    
+    for (const button of buttons) {
+      this.addGameObject(button);
     }
 
     // Create enemies and add them to the game

@@ -3,6 +3,7 @@
 // This class depends on the Camera, which is a separate module and needs to be imported.
 import Camera from './camera.js';
 import { AudioFiles } from './resources.js';
+import Button from '../game/button.js';
 
 // The Game class is responsible for setting up and managing the main game loop.
 class Game {
@@ -28,6 +29,8 @@ class Game {
     this.camera = new Camera(null, this.canvas.width, this.canvas.height);
     // Background Music
     this.bgm = new Audio(AudioFiles.bgm);
+    // Paused
+    //this.isPaused = false;
   }
 
   // This method resizes the canvas to fill the window, with a small margin.
@@ -49,9 +52,22 @@ class Game {
     // Update the last frame time.
     this.lastFrameTime = currentFrameTime;
 
-    // Update all game objects and the camera.
-    this.update();
-    this.camera.update();
+    if (this.gameObjects != null) {
+      const buttons = this.game.gameObjects.filter((obj) => obj instanceof Button);
+    }
+    
+    for (const button of buttons) {
+      if (button.isClicked) {
+        if (button.text == "Pause") {
+          isRunning = false;
+        }
+      }
+    }
+    if (!isPaused) {
+      // Update all game objects and the camera.
+      this.update();
+      this.camera.update();
+    }
     // Draw the game objects on the canvas.
     this.draw();
 
@@ -64,14 +80,14 @@ class Game {
 
   // This method updates all the game objects.
   update() {
-    // Call each game object's update method with the delta time.
-    for (const gameObject of this.gameObjects) {
-      gameObject.update(this.deltaTime);
-    }
-    // Filter out game objects that are marked for removal.
-    this.gameObjects = this.gameObjects.filter(obj => !this.gameObjectsToRemove.includes(obj));
-    // Clear the list of game objects to remove.
-    this.gameObjectsToRemove = [];
+      // Call each game object's update method with the delta time.
+      for (const gameObject of this.gameObjects) {
+        gameObject.update(this.deltaTime);
+      }
+      // Filter out game objects that are marked for removal.
+      this.gameObjects = this.gameObjects.filter(obj => !this.gameObjectsToRemove.includes(obj));
+      // Clear the list of game objects to remove.
+      this.gameObjectsToRemove = [];
   }
 
   // This method draws all the game objects on the canvas.

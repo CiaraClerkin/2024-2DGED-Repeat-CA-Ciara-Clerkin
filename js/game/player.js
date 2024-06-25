@@ -48,19 +48,24 @@ class Player extends GameObject {
     
     // Attraction (basic)
     //https://www.toptal.com/developers/keycode/e
-    if (input.isKeyPress('KeyE')) {   //change this to a key press
+    //if (input.isKeyPress('KeyE')) {   //change this to a key press
+    if (input.isKeyDown('KeyE')) {
       console.log(this.attracting);
       if (!this.attracting) {
         //console.log(false);
-        this.attracting = true;  
+        this.attracting = true;
+        this.repelSound.pause();
+        this.attractSound.play();  
       } 
       else {
         this.attracting = false;
+        this.attractSound.pause();
+        this.repelSound.play();
       }
     }
 
     // avoid looping?
-    if (input.isKeyDown('KeyE')) {
+    /*if (input.isKeyDown('KeyE')) {
       if (!this.attracting) {
         this.repelSound.pause();
         this.attractSound.play();
@@ -69,7 +74,7 @@ class Player extends GameObject {
         this.attractSound.pause;
         this.repelSound.play();
       } 
-    }
+    }*/
 
     /*if (this.attracting == false) {
       this.currentFace = "top";
