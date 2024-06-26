@@ -3,7 +3,7 @@
 // This class depends on the Camera, which is a separate module and needs to be imported.
 import Camera from './camera.js';
 import { AudioFiles } from './resources.js';
-import Button from '../game/button.js';
+//import Button from '../game/button.js';
 
 // The Game class is responsible for setting up and managing the main game loop.
 class Game {
@@ -52,7 +52,7 @@ class Game {
     // Update the last frame time.
     this.lastFrameTime = currentFrameTime;
 
-    if (this.gameObjects != null) {
+    /*if (this.gameObjects != null) {
       const buttons = this.game.gameObjects.filter((obj) => obj instanceof Button);
     }
     
@@ -62,8 +62,9 @@ class Game {
           isRunning = false;
         }
       }
-    }
-    if (!isPaused) {
+    }*/
+
+    if (!this.isPaused) {
       // Update all game objects and the camera.
       this.update();
       this.camera.update();

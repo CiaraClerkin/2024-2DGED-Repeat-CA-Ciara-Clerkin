@@ -455,6 +455,11 @@ class Player extends GameObject {
     this.score = 0;
     this.resetPlayerState();
   }
+
+  reset() {
+    this.resetPlayerState();
+    this.resetGame();
+  }
 }
 
 export default Player;

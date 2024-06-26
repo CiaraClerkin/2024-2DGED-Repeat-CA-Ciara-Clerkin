@@ -44,8 +44,10 @@ class Level extends Game {
       this.addGameObject(platform);
     }
 
-
-    const buttons = [new Button("Pause", 0, 50, 100, 50)];
+    const buttons = [
+      new Button("Pause", 0, 50, 100, 50), 
+      new Button("Reset", 0, 100, 100, 50)
+    ];
     
     for (const button of buttons) {
       this.addGameObject(button);
