@@ -31,6 +31,7 @@ class Game {
     this.bgm = new Audio(AudioFiles.bgm);
     // Paused
     //this.isPaused = false;
+    this.gameState = "game" // mainMenu, game, pauseMenu
   }
 
   // This method resizes the canvas to fill the window, with a small margin.
@@ -64,7 +65,7 @@ class Game {
       }
     }*/
 
-    if (!this.isPaused) {
+    if (this.gameState != "pauseMenu") {
       // Update all game objects and the camera.
       this.update();
       this.camera.update();
@@ -124,10 +125,18 @@ class Game {
     this.gameObjectsToRemove.push(gameObject);
   }
 
+  // made for removing everything for swtiching to different gameStates
+  removeAllGameObjects() {
+    for (const gameObject of this.gameObjects) {
+      this.removeGameObject(gameObject);
+    }
+  }
+
   // This method resets the game to its initial state and then restarts it.
   reset() {
     // Stop the game.
     this.isRunning = false;
+    this.gameState = "game";
 
     // Reset all game objects that have a reset method.
     for (const gameObject of this.gameObjects) {

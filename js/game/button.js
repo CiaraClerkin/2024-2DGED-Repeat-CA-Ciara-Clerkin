@@ -10,7 +10,7 @@ class Button extends GameObject {
         //this.renderer = new Renderer("black", width, height);
         //this.addComponent(this.renderer);
 
-        this.uiComponenet = new UI(text, x, y);
+        this.uiComponenet = new UI(text, x, y, true);
         this.addComponent(this.uiComponenet);
 
         this.width = width; 
@@ -30,6 +30,7 @@ class Button extends GameObject {
 
     onClick(event) {        
         console.log("Click!");
+        //console.log(this.game.isPaused);
         /*this.clientX = event.clientX;
         this.clientY = event.clientY;*/
 
@@ -40,14 +41,26 @@ class Button extends GameObject {
                 console.log("Pause!");
                 this.game.reset();
             }*/
-            if (this.text == "Pause") {
-                console.log("Pause!");
-                this.game.isPaused = !this.game.isPaused;
+
+            if (this.game.gameState == "game") {
+                if (this.text == "Pause") {
+                    //console.log("Pause!");
+                    this.game.gameState = "pauseMenu";
+                }
             }
-            else if (this.text == "Reset") {
-                console.log("Reset!");
-                this.game.reset();
+            else if (this.game.gameState == "pauseMenu") {
+                if (this.text == "Resume") {
+                    this.game.gameState = "game";
+                }
+                else if (this.text == "Reset") {
+                    console.log("Reset!");
+                    this.game.reset();
+                }
+                else if (this.text == "Exit") {
+                    //this.game
+                }
             }
+         
             
             //this.isClicked = true; // will need to change this back to false when we're done using it
         }

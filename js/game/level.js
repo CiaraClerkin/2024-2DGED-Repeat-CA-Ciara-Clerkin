@@ -44,14 +44,30 @@ class Level extends Game {
       this.addGameObject(platform);
     }
 
-    const buttons = [
-      new Button("Pause", 0, 50, 100, 50), 
+    
+    const pause = new Button("Pause", 0, 50, 100, 50);
+    this.addGameObject(pause);
+    /*const pauseButtons = [ 
       new Button("Reset", 0, 100, 100, 50)
     ];
     
-    for (const button of buttons) {
-      this.addGameObject(button);
+    for (const button of pauseButtons) {
+      if (this.gameState == "pauseMenu") {
+        this.addGameObject(button);
+      }
+      else {
+        this.removeGameObject(button);
+      }
     }
+
+    if (this.gameState == "game") {
+      this.addGameObject(pause);
+    }
+    else {
+
+    }*/
+
+    
 
     // Create enemies and add them to the game
     /*this.addGameObject(new Enemy(50, this.canvas.height - 90));
