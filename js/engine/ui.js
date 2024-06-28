@@ -1,5 +1,7 @@
 //All jsGameEngine.zip moodle
 
+// Import the Game class
+import Game from "./game.js";
 // Import the Component parent class.
 import Component from './component.js';
 
@@ -13,7 +15,7 @@ class UI extends Component {
     this.text = text; // The text that this UI component will draw.
     this.x = x; // The x-coordinate at which to start drawing the text.
     this.y = y; // The y-coordinate at which to start drawing the text.
-    this.button = button; // Boolean that decides if we also draw a rectangle behind the text
+    this.button = button; // Boolean for displaying buttons
     this.font = font; // The font in which to draw the text.
     this.color = color; // The color in which to draw the text.
     this.textAlign = textAlign; // The alignment of the text.

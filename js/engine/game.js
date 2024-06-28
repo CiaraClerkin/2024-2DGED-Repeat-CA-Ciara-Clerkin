@@ -3,7 +3,7 @@
 // This class depends on the Camera, which is a separate module and needs to be imported.
 import Camera from './camera.js';
 import { AudioFiles } from './resources.js';
-//import Button from '../game/button.js';
+import Button from '../game/button.js';
 
 // The Game class is responsible for setting up and managing the main game loop.
 class Game {
@@ -70,6 +70,24 @@ class Game {
       this.update();
       this.camera.update();
     }
+    
+    /*const pauseButtons = [ 
+      new Button("Resume", 0, 100, 100, 50),
+      new Button("Reset", 0, 150, 100, 50)
+    ];
+    
+    for (const button of pauseButtons) {
+      if (this.gameState == "pauseMenu") {
+        this.addGameObject(button);
+      }
+      else {
+        //console.log("Howdy");
+        this.removeGameObject(button);
+      }
+    }*/
+
+    console.log(this.gameState); 
+
     // Draw the game objects on the canvas.
     this.draw();
 
@@ -104,8 +122,13 @@ class Game {
 
     // Draw each game object on the canvas.
     for (const gameObject of this.gameObjects) {
-      gameObject.draw(this.ctx);
+      // This horrific if statement allows non-buttons to always be drawn, and the buttons to appear as intended (pause in game gameState, and the rest in pauseMenu gameState)
+      if ((gameObject instanceof Button && (this.gameState == "pauseMenu" && gameObject.text != "Pause") || (this.gameState == "game" && gameObject.text == "Pause")) || !(gameObject instanceof Button)) {
+        gameObject.draw(this.ctx);
+      }
     }
+
+    //(this.game.gameState == "pauseMenu" && this.text != "Pause") || (this.game.gameState == "game" && this.text == "Pause")
 
     // Restore the canvas and context to their state before the camera translation.
     this.ctx.restore();

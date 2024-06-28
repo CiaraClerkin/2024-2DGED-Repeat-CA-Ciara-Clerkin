@@ -44,14 +44,18 @@ class Level extends Game {
       this.addGameObject(platform);
     }
 
-    
-    const pause = new Button("Pause", 0, 50, 100, 50);
-    this.addGameObject(pause);
-    /*const pauseButtons = [ 
-      new Button("Reset", 0, 100, 100, 50)
+    const pauseButtons = [ 
+      new Button("Pause", 0, 50, 100, 50),
+      new Button("Resume", this.canvas.width/2 - 30, 200, 100, 50),
+      new Button("Reset", this.canvas.width/2 - 30, 250, 100, 50),
+      new Button("Exit", this.canvas.width/2 - 30, 300, 100, 50)
     ];
-    
+
     for (const button of pauseButtons) {
+      this.addGameObject(button);
+    }
+    
+    /*for (const button of pauseButtons) {
       if (this.gameState == "pauseMenu") {
         this.addGameObject(button);
       }
