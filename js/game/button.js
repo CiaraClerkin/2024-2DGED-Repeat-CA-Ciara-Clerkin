@@ -54,10 +54,18 @@ class Button extends GameObject {
                 }
                 else if (this.text == "Reset") {
                     console.log("Reset!");
+                    this.game.gameState = "game";
                     this.game.reset();
                 }
                 else if (this.text == "Exit") {
                     //this.game
+                    this.game.gameState = "mainMenu";
+                    this.game.reset();
+                }
+            }
+            else if (this.game.gameState == "mainMenu") {
+                if (this.text == "Start") {
+                    this.game.gameState = "game";
                 }
             }
          

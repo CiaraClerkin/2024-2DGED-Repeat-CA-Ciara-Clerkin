@@ -48,7 +48,8 @@ class Level extends Game {
       new Button("Pause", 0, 50, 100, 50),
       new Button("Resume", this.canvas.width/2 - 30, 200, 100, 50),
       new Button("Reset", this.canvas.width/2 - 30, 250, 100, 50),
-      new Button("Exit", this.canvas.width/2 - 30, 300, 100, 50)
+      new Button("Exit", this.canvas.width/2 - 30, 300, 100, 50),
+      new Button("Start", this.canvas.width/2 - 30, 250, 100, 50)
     ];
 
     for (const button of pauseButtons) {

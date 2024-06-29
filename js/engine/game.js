@@ -31,7 +31,7 @@ class Game {
     this.bgm = new Audio(AudioFiles.bgm);
     // Paused
     //this.isPaused = false;
-    this.gameState = "game" // mainMenu, game, pauseMenu
+    this.gameState = "mainMenu" // mainMenu, game, pauseMenu
   }
 
   // This method resizes the canvas to fill the window, with a small margin.
@@ -65,7 +65,7 @@ class Game {
       }
     }*/
 
-    if (this.gameState != "pauseMenu") {
+    if (this.gameState == "game") {
       // Update all game objects and the camera.
       this.update();
       this.camera.update();
@@ -122,8 +122,8 @@ class Game {
 
     // Draw each game object on the canvas.
     for (const gameObject of this.gameObjects) {
-      // This horrific if statement allows non-buttons to always be drawn, and the buttons to appear as intended (pause in game gameState, and the rest in pauseMenu gameState)
-      if ((gameObject instanceof Button && (this.gameState == "pauseMenu" && gameObject.text != "Pause") || (this.gameState == "game" && gameObject.text == "Pause")) || !(gameObject instanceof Button)) {
+      // This horrific if statement allows non-buttons to always be drawn (unless we're on the mainMenu), and the buttons to appear as intended (pause in game gameState, start in mainMenu and the rest in pauseMenu gameState)
+      if ((gameObject instanceof Button && (this.gameState == "pauseMenu" && gameObject.text != "Pause" && gameObject.text != "Start") || (this.gameState == "game" && gameObject.text == "Pause") || (this.gameState == "mainMenu" && gameObject.text == "Start")) || (this.gameState != "mainMenu" && !(gameObject instanceof Button))) {
         gameObject.draw(this.ctx);
       }
     }
@@ -159,7 +159,6 @@ class Game {
   reset() {
     // Stop the game.
     this.isRunning = false;
-    this.gameState = "game";
 
     // Reset all game objects that have a reset method.
     for (const gameObject of this.gameObjects) {
